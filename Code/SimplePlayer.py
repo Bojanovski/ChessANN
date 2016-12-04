@@ -1,6 +1,7 @@
-import chess;
-import random;
-import numpy as np;
+from dependencies import chess
+import random
+import numpy as np
+
 class decider:
   
   def make_move(self, board):
@@ -9,10 +10,10 @@ class decider:
     board.push(legal_moves[np.argmax(values)])
     
   def evaluate(self, board, move):
-    board.push(move);
-    rating = self.rate(board);
+    board.push(move)
+    rating = self.rate(board)
     board.pop()
-    return rating;
+    return rating
     
   def rate(self, board):
-    return random.random();
+    return random.random()

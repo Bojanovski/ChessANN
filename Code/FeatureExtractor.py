@@ -56,12 +56,24 @@ def extract_global_features(board):
 	
 	return
 
-def extract_piece_centric_features(board):
-	assert(board.is_valid())
+def create_feature_vector(listOfPieces, slotsNum):
+	vec = [0]*slotsNum
+	for ele in listOfPieces:
+		vec[ele.index] = 1
+	
+	return vec
+	
+def extract_piece_centric_features(interface):
+	assert(interface.get_board().is_valid())
 	vec = []
 	
-	#print(chess.Piece.from_symbol('P'))
-	#wqp 
+	list = interface.get_piece(chess.QUEEN, chess.WHITE)
+	v = create_feature_vector(list, 1)
+	vec.extend(v)
+	
+	list = interface.get_piece(chess.BISHOP, chess.WHITE)
+	v = create_feature_vector(list, 2)
+	vec.extend(v)
 	
 	print(vec)
 	return
@@ -79,7 +91,7 @@ interface = cabi.ChessANNBoardInterface()
 while (True):
 	print(interface.get_board())
 	extract_global_features(interface.get_board())
-	extract_piece_centric_features(interface.get_board())
+	extract_piece_centric_features(interface)
 	
 	interface.make_move()
 	input()

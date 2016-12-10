@@ -1,7 +1,7 @@
 from dependencies import chess
 import random
 import numpy as np
-import SimplePlayer as sp
+import ChessANNBoardInterface as cabi
 
 def is_empty(board, square):
 	return board.piece_type_at(square) == None
@@ -60,20 +60,20 @@ def extract_piece_centric_features(board):
 	assert(board.is_valid())
 	vec = []
 	
-	wqp 
+	#print(chess.Piece.from_symbol('P'))
+	#wqp 
 	
 	print(vec)
 	return	
 	
-board = chess.Board()
-dec = sp.Decider()
+interface = cabi.ChessANNBoardInterface()
 
 while (True):
-	print(board)
-	extract_global_features(board)
-	extract_piece_centric_features(board)
+	print(interface.get_board())
+	extract_global_features(interface.get_board())
+	extract_piece_centric_features(interface.get_board())
 	
-	dec.make_move(board)
+	interface.make_move()
 	input()
 
 

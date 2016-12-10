@@ -45,8 +45,7 @@ class ChessANNBoardInterface:
 		for sq in p:
 			elements.append(get_xy_from_index(sq))
 		return elements
-		
-			
+    
 	def evaluate(self, board, move):
 		board.push(move)
 		rating = self.analyzer.rate(board)

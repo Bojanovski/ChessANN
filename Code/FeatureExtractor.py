@@ -69,19 +69,33 @@ def extract_piece_centric_features(board):
 def extract_attack_def_maps(board):
   assert(board.is_valid())
   
-  value_dict = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK:5, chess.QUEEN:9}
+  value_dict = {
+  'P': 1, 'N': 3, 'B': 3, 'R': 5, 'Q': 9, 'K': 4,
+  'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9, 'k': 4}
+  attack_list = []
+  defense_list = []
+  for sq in chess.SQUARES:
+    l = []
+    for attacker in list(board.attackers(board.turn, sq)):
+      l += [value_dict[str(board.piece_at(attacker))]]
+    attack_list += [min(l)] if len(l) != 0 else [0]
+    
+    l = []
+    for defender in list(board.attackers(chess.WHITE if board.turn==chess.BLACK else chess.BLACK, sq)):
+      l += [value_dict[str(board.piece_at(defender))]]
+    defense_list += [min(l)] if len(l) != 0 else [0]
   
-  
-  print(board.attackers(chess.WHITE, chess.F3))
+  print(attack_list+defense_list)
 	
 interface = cabi.ChessANNBoardInterface()
 
 while (True):
-	print(interface.get_board())
-	extract_global_features(interface.get_board())
-	extract_piece_centric_features(interface.get_board())
-	
-	interface.make_move()
-	input()
+  print(interface.get_board())
+  # extract_global_features(interface.get_board())
+  # extract_piece_centric_features(interface.get_board())
+  extract_attack_def_maps(interface.get_board())
+  
+  interface.make_move()
+  input()
 
 

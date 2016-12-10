@@ -23,6 +23,3 @@ class Decider:
     rating = self.analyzer.rate(board)
     board.pop()
     return rating
-
-	
-b = BoardAnalyzer()

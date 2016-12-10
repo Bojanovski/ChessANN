@@ -63,16 +63,25 @@ def extract_piece_centric_features(board):
 	wqp 
 	
 	print(vec)
-	return	
+	return
+
+def extract_attack_def_maps(board):
+  assert(board.is_valid())
+  
+  value_dict = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 3, chess.ROOK:5, chess.QUEEN:9}
+  
+  
+  print(board.attackers(chess.WHITE, chess.F3))
 	
 board = chess.Board()
 dec = sp.Decider()
 
 while (True):
 	print(board)
-	extract_global_features(board)
-	extract_piece_centric_features(board)
-	
+	#extract_global_features(board)
+	#extract_piece_centric_features(board)
+	extract_attack_def_maps(board)
+  
 	dec.make_move(board)
 	input()
 

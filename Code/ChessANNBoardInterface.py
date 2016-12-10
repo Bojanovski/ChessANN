@@ -80,8 +80,7 @@ class ChessANNBoardInterface:
 			elements.append(newEle)
 			self.boardArray[x, y] = newEle
 		return elements
-		
-			
+    
 	def evaluate(self, board, move):
 		board.push(move)
 		rating = self.analyzer.rate(board)

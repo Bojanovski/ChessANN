@@ -59,8 +59,8 @@ class GroupNetwork():
     self.session = tf.Session();
     self.session.run(tf.initialize_all_variables())
   
-  def train(X, Y_, lr, niter):
-    mse = tf.sum((self.out - self.output)**2)
+  def train(self, X, Y_, lr, niter):
+    mse = tf.reduce_sum((self.out - self.output)**2)
     train_step = tf.train.GradientDescentOptimizer(lr).minimize(mse)
     
     errs = [];

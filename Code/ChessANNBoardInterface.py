@@ -1,6 +1,9 @@
 from dependencies import chess
 import random
 import numpy as np
+import pdb
+
+random.seed(2)
 
 def get_xy_from_index(i):
     x = i % 8
@@ -31,6 +34,7 @@ class Piece:
 class ChessANNBoardInterface:
         
     def __init__(self):
+        self.moveCounter = 0
         self.analyzer = BoardAnalyzer()
         self.board = chess.Board()
         
@@ -87,8 +91,28 @@ class ChessANNBoardInterface:
         rating = self.analyzer.rate(board)
         board.pop()
         return rating
-        
+    
+    # returns the rook move if there is castling
+    def is_castling(self, move):
+        posXY = get_xy_from_char_and_number(move.uci()[0:2])
+        moveToXY = get_xy_from_char_and_number(move.uci()[2:4])
+        pieceType = self.boardArray[posXY].piece
+        pieceColor = self.boardArray[posXY].color
+        if (pieceType == chess.KING):
+            if (pieceColor == chess.WHITE):
+                if (moveToXY[0] + 1 < posXY[0]): # left castling
+                    return ((0, 0), (moveToXY[0]+1, 0))
+                elif (moveToXY[0] - 1 > posXY[0]): # right castling
+                    return ((7, 0), (moveToXY[0]-1, 0))
+            else: # black
+                if (moveToXY[0] + 1 < posXY[0]): # left castling
+                    return ((0, 7), (moveToXY[0]+1, 7))
+                elif (moveToXY[0] - 1 > posXY[0]): # right castling
+                    return ((7, 7), (moveToXY[0]-1, 7))
+        return None
+    
     def make_move(self):
+        self.moveCounter += 1
         legal_moves = list(self.board.legal_moves)
         values = np.array([self.evaluate(self.board, x) for x in legal_moves])
         if (len(values) == 0):
@@ -99,7 +123,14 @@ class ChessANNBoardInterface:
         moveToXY = get_xy_from_char_and_number(move.uci()[2:4])
         self.board.push(move)
         
-        # update interface's position data      
+        # update interface's position data
+        c_ret = self.is_castling(move)
+        if (c_ret):
+            c_posXY, c_moveToXY = c_ret
+            self.boardArray[c_moveToXY] = self.boardArray[c_posXY]
+            self.boardArray[c_moveToXY].pos = c_moveToXY
+            self.boardArray[c_posXY] = None
+        
         self.boardArray[moveToXY] = self.boardArray[posXY]
         self.boardArray[moveToXY].pos = moveToXY
         self.boardArray[posXY] = None

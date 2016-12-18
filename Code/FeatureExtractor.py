@@ -262,7 +262,8 @@ if __name__=="__main__":
         vec.extend(v)
         v = extract_attack_def_maps(interface.get_board())
         vec.extend(v)
-        print(vec)
+        
+        #print(vec)
         
         interface.make_move()
-        input()
+        #input()

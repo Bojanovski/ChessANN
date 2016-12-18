@@ -1,4 +1,5 @@
 import subprocess
+import re
 
 ENGINE_BIN = "stockfish"
 DEPTH = 20
@@ -19,17 +20,15 @@ def evaluate_position(board, depth=DEPTH):
     engine.stdin.write("position fen "+board.fen()+"\n")
     engine.stdin.write("go depth "+str(DEPTH)+"\n")
 
-    last_line = ""
     while True:
         line = engine.stdout.readline().strip()
-        if "bestmove" in line:
+        if line.startswith("info") and (" depth "+str(DEPTH)) in line \
+                and "score cp" in line and "bound" not in line:
             break
-        else:
-            last_line = line
 
     engine.stdin.write("quit\n")
 
     # score in centipawns
-    score = last_line.split()[9]
-
+    matcher = re.match(".*score cp ([0-9]+).*", line)
+    score = int(matcher.group(1))
     return score

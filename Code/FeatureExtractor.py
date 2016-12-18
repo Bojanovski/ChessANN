@@ -1,5 +1,5 @@
 from dependencies import chess
-from chess import WHITE, BLACK, KING, QUEEN, ROOK, BISHOP, KNIGHT, PAWN, \
+from dependencies.chess import WHITE, BLACK, KING, QUEEN, ROOK, BISHOP, KNIGHT, PAWN, \
         A1, A2, A3, A4, A5, A6, A7, A8, B1, B2, B3, B4, B5, B6, B7, B8, \
         C1, C2, C3, C4, C5, C6, C7, C8, D1, D2, D3, D4, D5, D6, D7, D8, \
         E1, E2, E3, E4, E5, E6, E7, E8, F1, F2, F3, F4, F5, F6, F7, F8, \
@@ -64,27 +64,98 @@ def extract_global_features(board):
     return
 
 
-def create_feature_vector(listOfPieces, slotsNum):
-    vec = [0]*slotsNum
+def create_feature_vector_piece_slot(listOfPieces, slotSize, slotsNum):
+    vec = [0]*slotsNum*slotSize
     for ele in listOfPieces:
-        vec[ele.index] = 1
+        vec[ele.index*slotSize + 0] = 1
+        vec[ele.index*slotSize + 1] = ele.pos[0]
+        vec[ele.index*slotSize + 2] = ele.pos[1]
 
     return vec
 
+# sliding in this directions:
+#       0
+#     0 0 0
+#       0
+def create_feature_vector_sliding_plus_slot(interface, listOfPieces, slotsNum):
+    slotSize = 4
+    vec = [0]*slotsNum*slotSize
+    for ele in listOfPieces:
+        posXY = (ele.pos[0], ele.pos[1])
+        c = ele.color
+        # how much can I go left
+        vec[ele.index*slotSize + 0] = interface.space_to_move_left(posXY, c)
+        # how much can I go right
+        vec[ele.index*slotSize + 1] = interface.space_to_move_right(posXY, c)
+        # how much can I go up
+        vec[ele.index*slotSize + 2] = interface.space_to_move_up(posXY, c)
+        # how much can I go down
+        vec[ele.index*slotSize + 3] = interface.space_to_move_down(posXY, c)
+
+    return vec
 
 def extract_piece_centric_features(interface):
     assert(interface.get_board().is_valid())
+    slotSize = 3
     vec = []
 
+    # whites
+    list = interface.get_piece(KING, WHITE)
+    v = create_feature_vector_piece_slot(list, slotSize, 1)
+    vec.extend(v)
+    
     list = interface.get_piece(QUEEN, WHITE)
-    v = create_feature_vector(list, 1)
+    v = create_feature_vector_piece_slot(list, slotSize, 1)
     vec.extend(v)
 
+    list = interface.get_piece(ROOK, WHITE)
+    v = create_feature_vector_piece_slot(list, slotSize, 2)
+    vec.extend(v)
+    
     list = interface.get_piece(BISHOP, WHITE)
-    v = create_feature_vector(list, 2)
+    v = create_feature_vector_piece_slot(list, slotSize, 2)
+    vec.extend(v)
+    
+    list = interface.get_piece(KNIGHT, WHITE)
+    v = create_feature_vector_piece_slot(list, slotSize, 2)
+    vec.extend(v)
+    
+    list = interface.get_piece(PAWN, WHITE)
+    v = create_feature_vector_piece_slot(list, slotSize, 8)
+    vec.extend(v)
+    
+    # blacks
+    list = interface.get_piece(KING, BLACK)
+    v = create_feature_vector_piece_slot(list, slotSize, 1)
+    vec.extend(v)
+    
+    list = interface.get_piece(QUEEN, BLACK)
+    v = create_feature_vector_piece_slot(list, slotSize, 1)
     vec.extend(v)
 
-    print(vec)
+    list = interface.get_piece(ROOK, BLACK)
+    v = create_feature_vector_piece_slot(list, slotSize, 2)
+    vec.extend(v)
+    
+    list = interface.get_piece(BISHOP, BLACK)
+    v = create_feature_vector_piece_slot(list, slotSize, 2)
+    vec.extend(v)
+    
+    list = interface.get_piece(KNIGHT, BLACK)
+    v = create_feature_vector_piece_slot(list, slotSize, 2)
+    vec.extend(v)
+    
+    list = interface.get_piece(PAWN, BLACK)
+    v = create_feature_vector_piece_slot(list, slotSize, 8)
+    vec.extend(v)
+    
+    #print(vec)
+    
+    # sliding pieces mobility
+    list = interface.get_piece(QUEEN, WHITE)
+    v = create_feature_vector_sliding_plus_slot(interface, list, 1)
+    print(v)
+    
     return
 
 
@@ -121,7 +192,7 @@ def extract_attack_def_maps(board):
     attack_list = white_attackers_list if board.turn else black_attackers_list
     defense_list = black_attackers_list if board.turn else white_attackers_list
 
-    print(attack_list+defense_list)
+    #print(attack_list+defense_list)
 
 
 if __name__=="__main__":

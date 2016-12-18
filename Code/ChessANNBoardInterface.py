@@ -91,6 +91,8 @@ class ChessANNBoardInterface:
     def make_move(self):
         legal_moves = list(self.board.legal_moves)
         values = np.array([self.evaluate(self.board, x) for x in legal_moves])
+        if (len(values) == 0):
+            print("Check mate, br0!")
         i = np.argmax(values)
         move = legal_moves[i]
         posXY = get_xy_from_char_and_number(move.uci()[0:2])

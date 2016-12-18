@@ -13,38 +13,38 @@ def is_empty(board, square):
 
 
 def get_material_configuration(board):
-    wq = len(board.pieces(QUEEN,  WHITE))
-    wr = len(board.pieces(ROOK,   WHITE))
-    wb = len(board.pieces(BISHOP, WHITE))
-    wn = len(board.pieces(KNIGHT, WHITE))
-    wp = len(board.pieces(PAWN,   WHITE))
+    wq = len(board.pieces(QUEEN,  WHITE)) / 1.0
+    wr = len(board.pieces(ROOK,   WHITE)) / 2.0
+    wb = len(board.pieces(BISHOP, WHITE)) / 2.0
+    wn = len(board.pieces(KNIGHT, WHITE)) / 2.0
+    wp = len(board.pieces(PAWN,   WHITE)) / 8.0
 
-    bq = len(board.pieces(QUEEN,  BLACK))
-    br = len(board.pieces(ROOK,   BLACK))
-    bb = len(board.pieces(BISHOP, BLACK))
-    bn = len(board.pieces(KNIGHT, BLACK))
-    bp = len(board.pieces(PAWN,   BLACK))
+    bq = len(board.pieces(QUEEN,  BLACK)) / 1.0
+    br = len(board.pieces(ROOK,   BLACK)) / 2.0
+    bb = len(board.pieces(BISHOP, BLACK)) / 2.0
+    bn = len(board.pieces(KNIGHT, BLACK)) / 2.0
+    bp = len(board.pieces(PAWN,   BLACK)) / 8.0
     return [wq, wr, wb, wn, wp, bq, br, bb, bn, bp]
 
 
 def get_castling_rights(board):
-    k_white = board.has_kingside_castling_rights(WHITE) \
+    k_white = float(board.has_kingside_castling_rights(WHITE) \
                     and is_empty(board, F1) \
-                    and is_empty(board, G1)
+                    and is_empty(board, G1))
 
-    q_white = board.has_queenside_castling_rights(WHITE) \
+    q_white = float(board.has_queenside_castling_rights(WHITE) \
                     and is_empty(board, B1) \
                     and is_empty(board, C1) \
-                    and is_empty(board, D1)
+                    and is_empty(board, D1))
 
-    k_black = board.has_kingside_castling_rights(BLACK) \
+    k_black = float(board.has_kingside_castling_rights(BLACK) \
                     and is_empty(board, F8) \
-                    and is_empty(board, G8)
+                    and is_empty(board, G8))
 
-    q_black = board.has_queenside_castling_rights(BLACK) \
+    q_black = float(board.has_queenside_castling_rights(BLACK) \
                     and is_empty(board, B8) \
                     and is_empty(board, C8) \
-                    and is_empty(board, D8)
+                    and is_empty(board, D8))
 
     return [k_white, q_white, k_black, q_black]
 
@@ -54,7 +54,7 @@ def extract_global_features(board):
     vec = []
 
     # White's turn
-    vec.append(board.turn)
+    vec.append(float(board.turn))
 
     # Material configuration
     vec.extend(get_material_configuration(board))
@@ -62,15 +62,15 @@ def extract_global_features(board):
     # Castling rights
     vec.extend(get_castling_rights(board))
 
-    return
+    return vec
 
 
 def create_feature_vector_piece_slot(listOfPieces, slotSize, slotsNum):
-    vec = [0]*slotsNum*slotSize
+    vec = [0.0]*slotsNum*slotSize
     for ele in listOfPieces:
-        vec[ele.index*slotSize + 0] = 1
-        vec[ele.index*slotSize + 1] = ele.pos[0]
-        vec[ele.index*slotSize + 2] = ele.pos[1]
+        vec[ele.index*slotSize + 0] = 1.0
+        vec[ele.index*slotSize + 1] = ele.pos[0] / 7.0
+        vec[ele.index*slotSize + 2] = ele.pos[1] / 7.0
 
     return vec
 
@@ -85,13 +85,13 @@ def create_feature_vector_sliding_plus_slot(interface, listOfPieces, slotsNum):
         posXY = (ele.pos[0], ele.pos[1])
         c = ele.color
         # how much can I go left
-        vec[ele.index*slotSize + 0] = interface.space_to_move_left(posXY, c)
+        vec[ele.index*slotSize + 0] = interface.space_to_move_left(posXY, c) / 7.0
         # how much can I go right
-        vec[ele.index*slotSize + 1] = interface.space_to_move_right(posXY, c)
+        vec[ele.index*slotSize + 1] = interface.space_to_move_right(posXY, c) / 7.0
         # how much can I go up
-        vec[ele.index*slotSize + 2] = interface.space_to_move_up(posXY, c)
+        vec[ele.index*slotSize + 2] = interface.space_to_move_up(posXY, c) / 7.0
         # how much can I go down
-        vec[ele.index*slotSize + 3] = interface.space_to_move_down(posXY, c)
+        vec[ele.index*slotSize + 3] = interface.space_to_move_down(posXY, c) / 7.0
 
     return vec
 
@@ -106,13 +106,13 @@ def create_feature_vector_sliding_cross_slot(interface, listOfPieces, slotsNum):
         posXY = (ele.pos[0], ele.pos[1])
         c = ele.color
         # how much can I go left down
-        vec[ele.index*slotSize + 0] = interface.space_to_move_left_down(posXY, c)
+        vec[ele.index*slotSize + 0] = interface.space_to_move_left_down(posXY, c) / 7.0
         # how much can I go right
-        vec[ele.index*slotSize + 1] = interface.space_to_move_left_up(posXY, c)
+        vec[ele.index*slotSize + 1] = interface.space_to_move_left_up(posXY, c) / 7.0
         # how much can I go up
-        vec[ele.index*slotSize + 2] = interface.space_to_move_right_down(posXY, c)
+        vec[ele.index*slotSize + 2] = interface.space_to_move_right_down(posXY, c) / 7.0
         # how much can I go down
-        vec[ele.index*slotSize + 3] = interface.space_to_move_right_up(posXY, c)
+        vec[ele.index*slotSize + 3] = interface.space_to_move_right_up(posXY, c) / 7.0
 
     return vec    
 
@@ -171,14 +171,39 @@ def extract_piece_centric_features(interface):
     v = create_feature_vector_piece_slot(list, slotSize, 8)
     vec.extend(v)
     
-    #print(vec)
-    
     # sliding pieces mobility
+    # whites
     list = interface.get_piece(QUEEN, WHITE)
     v = create_feature_vector_sliding_cross_slot(interface, list, 1)
-    print(v)
+    vec.extend(v)
+    v = create_feature_vector_sliding_plus_slot(interface, list, 1)
+    vec.extend(v)
     
-    return
+    list = interface.get_piece(ROOK, WHITE)
+    v = create_feature_vector_sliding_plus_slot(interface, list, 2)
+    vec.extend(v)
+    
+    list = interface.get_piece(BISHOP, WHITE)
+    v = create_feature_vector_sliding_cross_slot(interface, list, 2)
+    vec.extend(v)
+    
+    # blacks
+    list = interface.get_piece(QUEEN, BLACK)
+    v = create_feature_vector_sliding_cross_slot(interface, list, 1)
+    vec.extend(v)
+    v = create_feature_vector_sliding_plus_slot(interface, list, 1)
+    vec.extend(v)
+    
+    list = interface.get_piece(ROOK, BLACK)
+    v = create_feature_vector_sliding_plus_slot(interface, list, 2)
+    vec.extend(v)
+    
+    list = interface.get_piece(BISHOP, BLACK)
+    v = create_feature_vector_sliding_cross_slot(interface, list, 2)
+    vec.extend(v)
+    
+    #print(vec)
+    return vec
 
 
 def extract_attack_def_maps(board):
@@ -193,6 +218,7 @@ def extract_attack_def_maps(board):
 
     white_attackers_list = []
     black_attackers_list = []
+    maxVal = max((value_dict[key] for key in value_dict), default=0)
 
     for sq in chess.SQUARES:
         # get attacker positions for each square
@@ -207,14 +233,19 @@ def extract_attack_def_maps(board):
         w_val = min((value_dict[piece] for piece in w_attackers), default=0)
         b_val = min((value_dict[piece] for piece in b_attackers), default=0)
 
-        white_attackers_list += [ w_val ]
-        black_attackers_list += [ b_val ]
+        white_attackers_list += [ w_val / maxVal ]
+        black_attackers_list += [ b_val / maxVal ]
 
     # determine who is doing the attacking
     attack_list = white_attackers_list if board.turn else black_attackers_list
     defense_list = black_attackers_list if board.turn else white_attackers_list
 
     #print(attack_list+defense_list)
+    vec = []
+    vec.extend(attack_list)
+    vec.extend(defense_list)
+    #print(vec)
+    return vec
 
 
 if __name__=="__main__":
@@ -223,9 +254,15 @@ if __name__=="__main__":
 
     while (True):
         print(interface.get_board())
-        extract_global_features(interface.get_board())
-        extract_piece_centric_features(interface)
-        extract_attack_def_maps(interface.get_board())
-
+        
+        vec = []
+        v = extract_global_features(interface.get_board())
+        vec.extend(v)
+        v = extract_piece_centric_features(interface)
+        vec.extend(v)
+        v = extract_attack_def_maps(interface.get_board())
+        vec.extend(v)
+        print(vec)
+        
         interface.make_move()
         input()

@@ -95,6 +95,27 @@ def create_feature_vector_sliding_plus_slot(interface, listOfPieces, slotsNum):
 
     return vec
 
+# sliding in this directions:
+#     0   0
+#       0
+#     0   0
+def create_feature_vector_sliding_cross_slot(interface, listOfPieces, slotsNum):
+    slotSize = 4
+    vec = [0]*slotsNum*slotSize
+    for ele in listOfPieces:
+        posXY = (ele.pos[0], ele.pos[1])
+        c = ele.color
+        # how much can I go left down
+        vec[ele.index*slotSize + 0] = interface.space_to_move_left_down(posXY, c)
+        # how much can I go right
+        vec[ele.index*slotSize + 1] = interface.space_to_move_left_up(posXY, c)
+        # how much can I go up
+        vec[ele.index*slotSize + 2] = interface.space_to_move_right_down(posXY, c)
+        # how much can I go down
+        vec[ele.index*slotSize + 3] = interface.space_to_move_right_up(posXY, c)
+
+    return vec    
+
 def extract_piece_centric_features(interface):
     assert(interface.get_board().is_valid())
     slotSize = 3
@@ -154,7 +175,7 @@ def extract_piece_centric_features(interface):
     
     # sliding pieces mobility
     list = interface.get_piece(QUEEN, WHITE)
-    v = create_feature_vector_sliding_plus_slot(interface, list, 1)
+    v = create_feature_vector_sliding_cross_slot(interface, list, 1)
     print(v)
     
     return

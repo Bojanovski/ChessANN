@@ -158,13 +158,59 @@ class ChessANNBoardInterface:
                 count += 1
         return count
         
-    def space_to_move_left(self, posXY, color):
+    def space_to_move_left_down(self, posXY, color):
         x = posXY[0]
         y = posXY[1]
         count = 0
-        for i in reversed(range(x)):
-            if self.boardArray[i,y] != None:
-                if self.boardArray[i,y].color != color:
+        steps = min(x, y)
+        for i in range(1, steps+1):
+            if self.boardArray[x-i,y-i] != None:
+                if self.boardArray[x-i,y-i].color != color:
+                    count += 1  # eating the enemy means one additional
+                                # step in that direction
+                break
+            else:
+                count += 1
+        return count
+        
+    def space_to_move_left_up(self, posXY, color):
+        x = posXY[0]
+        y = posXY[1]
+        count = 0
+        steps = min(x, 7-y)
+        for i in range(1, steps+1):
+            if self.boardArray[x-i,y+i] != None:
+                if self.boardArray[x-i,y+i].color != color:
+                    count += 1  # eating the enemy means one additional
+                                # step in that direction
+                break
+            else:
+                count += 1
+        return count
+
+    def space_to_move_right_down(self, posXY, color):
+        x = posXY[0]
+        y = posXY[1]
+        count = 0
+        steps = min(7-x, y)
+        for i in range(1, steps+1):
+            if self.boardArray[x+i,y-i] != None:
+                if self.boardArray[x+i,y-i].color != color:
+                    count += 1  # eating the enemy means one additional
+                                # step in that direction
+                break
+            else:
+                count += 1
+        return count
+        
+    def space_to_move_right_up(self, posXY, color):
+        x = posXY[0]
+        y = posXY[1]
+        count = 0
+        steps = min(7-x, 7-y)
+        for i in range(1, steps+1):
+            if self.boardArray[x+i,y+i] != None:
+                if self.boardArray[x+i,y+i].color != color:
                     count += 1  # eating the enemy means one additional
                                 # step in that direction
                 break

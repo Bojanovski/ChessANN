@@ -15,6 +15,9 @@ class Game:
     def append(self, string):
         self.buffer = self.buffer + string
         
+    def clear(self): 
+        self.buffer = ''
+        
     def format_data(self):
         # discard the comments
         self.buffer = re.sub(r'{[^}]*}', '', self.buffer)
@@ -32,19 +35,22 @@ class GameLoader:
         return
         
     def get_game(self, skip):
-        
-        done = False
+    
         games_loaded = -1
         game = Game()
-        while(not done):
+        while(True):
             
             if (len(peek_line(self.f)) > 5 and \
                 peek_line(self.f)[0:6] == '[Event'):
                 games_loaded = games_loaded + 1
-        
-            if (games_loaded > skip):
-                done = True
-        
+                if (games_loaded > skip):
+                    break
+                else:
+                    game.clear()
+            
+            if (peek_line(self.f) == ''):
+                    break
+            
             line = self.f.readline()
             if (line[0] != '['):
                 game.append(line)
@@ -65,8 +71,12 @@ class GameLoader:
         
 # main
 gameLoader = GameLoader('..\Dataset\Games.txt')
-game = gameLoader.get_game(0)
+game = gameLoader.get_game(1)
 game.format_data()
 print(game.buffer)
 
-print(gameLoader.get_game_num())
+game = gameLoader.get_game(2)
+game.format_data()
+print(game.buffer)
+
+#print(gameLoader.get_game_num())

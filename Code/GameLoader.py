@@ -22,8 +22,8 @@ class Game:
         # discard the numbers
         self.buffer = re.sub(r'[0123456789]*\.', '', self.buffer)
         
+        # to list
         self.buffer = str.split(self.buffer)
-        
         self.buffer = self.buffer[:-1]
 
 class GameLoader:
@@ -51,9 +51,22 @@ class GameLoader:
         
         return game
         
+    def get_game_num(self):
+        
+        self.f.seek(0)
+        games_loaded = 0
+        for line in self.f:
+            
+            if (len(line) > 5 and line[0:6] == '[Event'):
+                games_loaded = games_loaded + 1
+        
+        return games_loaded
+        
         
 # main
 gameLoader = GameLoader('..\Dataset\Games.txt')
 game = gameLoader.get_game(0)
 game.format_data()
 print(game.buffer)
+
+print(gameLoader.get_game_num())

@@ -88,43 +88,52 @@ class GroupLayer:
 # prva vrijednost u architecture mora biti jednaka sumi prve dimenzija group_dimens
 # druga vrijednost u architecture je jednaka sumi vrijednosti druge dimenzije group_dimens
 class NNetwork:
-    """A 2-layer neural network."""
+    """A 2-layer neural network.
+    FC_dim -- dimensions of hidden layers after the group layer.
+    """
 
-    def __init__(self, LC_groups, FC_dim, learning_rate):
+    def __init__(self, LC_groups, FC_dim):
 
         (LC_ingroups, LC_outgroups) = LC_groups
         D = sum(LC_ingroups)    # input layer dimensionality
         H = sum(LC_outgroups)   # hidden layer dimensionality
-        C = FC_dim              # output dimensionality
+        C = FC_dim              # output dimensionalities
 
         self.layers = [GroupLayer(LC_ingroups, LC_outgroups,
                                       nonlinearity=tf.nn.relu)]
-        self.layers += [FCLayer(H, C, nonlinearity=tf.sigmoid)]
+        for i in range(len(C)-1):
+            self.layers += [FCLayer(H, C[i], nonlinearity=tf.nn.relu)]
+            H = C[i]
+        self.layers += [FCLayer(H, C[-1], nonlinearity=tf.nn.tanh)]
+        #self.layers += [FCLayer(H, C, nonlinearity=tf.sigmoid)]
 
         # samples
         self.X = tf.placeholder(tf.float32, [None, D])    # N x D
-        self.Y = tf.placeholder(tf.float32, [None, C])    # N x C
+        self.Y = tf.placeholder(tf.float32, [None, C[-1]])    # N x C
 
         # output
-        self.out = self.layers[0].forward(self.X)
-        self.out = self.layers[1].forward(self.out)
+        self.out = self.X
+        for l in self.layers:
+            self.out = l.forward(self.out)
 
         # loss
         self.loss = tf.reduce_sum((self.out - self.Y)**2)
 
         # train step & session
-        optimizer = tf.train.GradientDescentOptimizer(learning_rate)
-        optimizer = tf.train.AdamOptimizer(learning_rate)
+        self.lr = tf.placeholder(tf.float32, shape=[])
+        optimizer = tf.train.GradientDescentOptimizer(self.lr)
+        optimizer = tf.train.AdamOptimizer(self.lr)
         self.train_step = optimizer.minimize(self.loss)
         self.session = tf.Session()
+        self.session.run( tf.initialize_all_variables() )
 
 
-    def train(self, X, Y_, n_iter):
+    def train(self, X, Y_, n_iter, learning_rate):
         self.session.run( tf.initialize_all_variables() )
 
         errs = [];
         for i in range(n_iter):
-            feed_dict = {self.X: X, self.Y: Y_}
+            feed_dict = {self.X: X, self.Y: Y_, self.lr: learning_rate}
             fetches = [self.loss, self.train_step]
 
             (loss, _) = self.session.run(fetches, feed_dict=feed_dict)
@@ -161,7 +170,7 @@ def test():
     eta=1e-2; niter=1000
     print("lr={}, niter={}".format(eta, niter))
 
-    net = NNetwork(LC_groups=([2],[2]), FC_dim=2, learning_rate=eta)
+    net = NNetwork(LC_groups=([2],[2]), FC_dim=[2], learning_rate=eta)
     errs = net.train(X, Y, n_iter=niter)
     print(net.predict(X))
 

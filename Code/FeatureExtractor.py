@@ -246,6 +246,17 @@ def extract_attack_def_maps(board):
     vec.extend(defense_list)
     #print(vec)
     return vec
+    
+def extract_features(board_interface):
+    vec = []
+    v = extract_global_features(board_interface.get_board())
+    vec.extend(v)
+    v = extract_piece_centric_features(board_interface)
+    vec.extend(v)
+    v = extract_attack_def_maps(board_interface.get_board())
+    vec.extend(v)
+    
+    return vec;
 
 
 if __name__=="__main__":

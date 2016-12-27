@@ -2,6 +2,8 @@ from dependencies import chess
 import random
 import numpy as np
 import pdb
+import FeatureExtractor as fe
+import copy
 
 random.seed(2)
 
@@ -16,12 +18,15 @@ def get_xy_from_char_and_number(cn):
     return x, y
     
 class BoardAnalyzer:
+    def __init__(self, network=None):
+        self.net = network
+    
     def rate(self, board):
         #   neural network will go here
-        return random.random();
-
-    def train(self, inputs, outputs):
-        return;
+        if self.net == None:
+            return random.random();
+        else:
+            return self.net.predict([np.array(fe.extract_features(board))])[0,0]
 
 class Piece:
     def __init__(self, piece, color, index, pos):
@@ -33,9 +38,9 @@ class Piece:
         
 class ChessANNBoardInterface:
         
-    def __init__(self):
+    def __init__(self, analyzer = BoardAnalyzer()):
         self.moveCounter = 0
-        self.analyzer = BoardAnalyzer()
+        self.analyzer = analyzer
         self.board = chess.Board()
         
         self.boardArray = {}
@@ -87,9 +92,11 @@ class ChessANNBoardInterface:
         return elements
     
     def evaluate(self, board, move):
-        board.push(move)
-        rating = self.analyzer.rate(board)
-        board.pop()
+        # copy board to cpy
+        cpy = copy.deepcopy(self)
+        cpy.push_piece(move)
+        rating = self.analyzer.rate(cpy)
+        # board.pop()
         return rating
     
     # returns the rook move if there is castling
@@ -110,20 +117,19 @@ class ChessANNBoardInterface:
                 elif (moveToXY[0] - 1 > posXY[0]): # right castling
                     return ((7, 7), (moveToXY[0]-1, 7))
         return None
-    
-    def make_move(self):
+        
+    def push_piece(self, move):
+        if isinstance(move, str):
+            self.board.push_san(move)
+            move = self.board.pop()
+        
         self.moveCounter += 1
-        legal_moves = list(self.board.legal_moves)
-        values = np.array([self.evaluate(self.board, x) for x in legal_moves])
-        if (len(values) == 0):
-            print("Check mate, br0!")
-        i = np.argmax(values)
-        move = legal_moves[i]
+        
         posXY = get_xy_from_char_and_number(move.uci()[0:2])
         moveToXY = get_xy_from_char_and_number(move.uci()[2:4])
+        
         self.board.push(move)
         
-        # update interface's position data
         c_ret = self.is_castling(move)
         if (c_ret):
             c_posXY, c_moveToXY = c_ret
@@ -134,6 +140,32 @@ class ChessANNBoardInterface:
         self.boardArray[moveToXY] = self.boardArray[posXY]
         self.boardArray[moveToXY].pos = moveToXY
         self.boardArray[posXY] = None
+    
+    def make_move(self):
+        #self.moveCounter += 1
+        legal_moves = list(self.board.legal_moves)
+        values = np.array([self.evaluate(self, x) for x in legal_moves])
+        if (len(values) == 0):
+            print("Check mate, br0!")
+        i = np.argmax(values)
+        move = legal_moves[i]
+        #posXY = get_xy_from_char_and_number(move.uci()[0:2])
+        #moveToXY = get_xy_from_char_and_number(move.uci()[2:4])
+        #self.board.push(move)
+        
+        # update interface's position data
+        #c_ret = self.is_castling(move)
+        #if (c_ret):
+        #    c_posXY, c_moveToXY = c_ret
+        #    self.boardArray[c_moveToXY] = self.boardArray[c_posXY]
+        #    self.boardArray[c_moveToXY].pos = c_moveToXY
+        #    self.boardArray[c_posXY] = None
+        #
+        #self.boardArray[moveToXY] = self.boardArray[posXY]
+        #self.boardArray[moveToXY].pos = moveToXY
+        #self.boardArray[posXY] = None
+        
+        self.push_piece(move)
         
     def space_to_move_left(self, posXY, color):
         x = posXY[0]

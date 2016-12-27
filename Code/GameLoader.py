@@ -67,16 +67,3 @@ class GameLoader:
                 games_loaded = games_loaded + 1
         
         return games_loaded
-        
-        
-# main
-gameLoader = GameLoader('..\Dataset\Games.txt')
-game = gameLoader.get_game(1)
-game.format_data()
-print(game.buffer)
-
-game = gameLoader.get_game(2)
-game.format_data()
-print(game.buffer)
-
-#print(gameLoader.get_game_num())

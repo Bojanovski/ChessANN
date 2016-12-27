@@ -70,17 +70,17 @@ class GameLoader:
         self.f.seek(pos)
         return games_loaded
         
-        
 # main
-gameLoader = GameLoader('..\Dataset\Games.txt')
-gameLoader.get_game_num()
-
-game = gameLoader.get_game(0)
-game.format_data()
-print(game.buffer)
-
-game = gameLoader.get_game(0)
-game.format_data()
-print(game.buffer)
-
-#print(gameLoader.get_game_num())
+if __name__=="__main__":
+    gameLoader = GameLoader('..\Dataset\Games.txt')
+    gameLoader.get_game_num()
+    
+    game = gameLoader.get_game(0)
+    game.format_data()
+    print(game.buffer)
+    
+    game = gameLoader.get_game(0)
+    game.format_data()
+    print(game.buffer)
+    
+    #print(gameLoader.get_game_num())

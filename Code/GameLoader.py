@@ -59,6 +59,7 @@ class GameLoader:
         
     def get_game_num(self):
         
+        pos = self.f.tell()
         self.f.seek(0)
         games_loaded = 0
         for line in self.f:
@@ -66,16 +67,19 @@ class GameLoader:
             if (len(line) > 5 and line[0:6] == '[Event'):
                 games_loaded = games_loaded + 1
         
+        self.f.seek(pos)
         return games_loaded
         
         
 # main
 gameLoader = GameLoader('..\Dataset\Games.txt')
-game = gameLoader.get_game(1)
+gameLoader.get_game_num()
+
+game = gameLoader.get_game(0)
 game.format_data()
 print(game.buffer)
 
-game = gameLoader.get_game(2)
+game = gameLoader.get_game(0)
 game.format_data()
 print(game.buffer)
 

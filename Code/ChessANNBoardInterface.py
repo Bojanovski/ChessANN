@@ -42,7 +42,8 @@ class ChessANNBoardInterface:
         self.moveCounter = 0
         self.analyzer = analyzer
         self.board = chess.Board()
-        
+        self.movesList = []
+		
         self.boardArray = {}
         for i in range(8):
             for j in range(8):
@@ -68,7 +69,13 @@ class ChessANNBoardInterface:
         
     def get_board(self):
         return self.board
-    
+
+    def copy(self):
+        interface = ChessANNBoardInterface()
+        for move in self.movesList:
+            interface.push_piece(move)
+        return interface
+	
     def get_piece(self, piece, color):
         pList = []
         for key in self.boardArray:
@@ -129,7 +136,8 @@ class ChessANNBoardInterface:
         moveToXY = get_xy_from_char_and_number(move.uci()[2:4])
         
         self.board.push(move)
-        
+        self.movesList.append(move)
+		
         c_ret = self.is_castling(move)
         if (c_ret):
             c_posXY, c_moveToXY = c_ret

@@ -262,7 +262,7 @@ def extract_features(board_interface):
 if __name__=="__main__":
 
     interface = cabi.ChessANNBoardInterface()
-
+    i = 0
     while (True):
         print(interface.get_board())
         
@@ -273,6 +273,11 @@ if __name__=="__main__":
         vec.extend(v)
         v = extract_attack_def_maps(interface.get_board())
         vec.extend(v)
+        
+        if (i == 30):
+            ijo = interface.copy()
+            print('copy')
+            print(ijo.get_board())
         
         #print(vec)
         

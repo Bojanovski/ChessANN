@@ -1,6 +1,6 @@
 import subprocess
 import re
-
+import pdb
 ENGINE_BIN = "stockfish"
 DEPTH = 20
 
@@ -25,10 +25,9 @@ def evaluate_position(board, depth=DEPTH):
         if line.startswith("info") and (" depth "+str(DEPTH)) in line \
                 and "score cp" in line and "bound" not in line:
             break
-
+    
     engine.stdin.write("quit\n")
-
     # score in centipawns
-    matcher = re.match(".*score cp ([0-9]+).*", line)
+    matcher = re.match(".*score cp (-?[0-9]+).*", line)
     score = int(matcher.group(1))
     return score

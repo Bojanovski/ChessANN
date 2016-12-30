@@ -8,14 +8,7 @@ import pdb
 
 net = n.NNetwork([[15,144,128],[10,110,100]], [100,1])
 loader = gl.GameLoader('../Dataset/Games.txt')
-
 interface = cabi.ChessANNBoardInterface(analyzer = cabi.BoardAnalyzer(network = net))
-while(not interface.get_board().is_game_over()):
-    print(interface.get_board())
-    
-    mv = input("Please enter your move in algebraic notation: ")
-    interface.push_piece(mv)
-    interface.make_move()
 
 
 for i in range(loader.get_game_num()):
@@ -37,3 +30,9 @@ for i in range(loader.get_game_num()):
     
     net.train(X,Y,1,0.1)
 
+while(not interface.get_board().is_game_over()):
+    print(interface.get_board())
+    
+    mv = input("Please enter your move in algebraic notation: ")
+    interface.push_piece(mv)
+    interface.make_move()

@@ -1,6 +1,9 @@
 import subprocess
 import re
 import pdb
+import chess
+import GameLoader as gl
+
 ENGINE_BIN = "stockfish"
 DEPTH = 20
 
@@ -31,3 +34,24 @@ def evaluate_position(board, depth=DEPTH):
     matcher = re.match(".*score cp (-?[0-9]+).*", line)
     score = int(matcher.group(1))
     return score
+
+def evaluate_dataset(file_path):
+    loader = gl.GameLoader(file_path)
+    cache = {}
+    for i in range(loader.get_game_num()):
+        game = loader.get_game(0)
+        game.format_data()
+        board = chess.Board()
+        ratelist = []
+        for move in game.buffer:
+            board.push_san(move)
+            print(board)
+            if board.fen() in cache.keys():
+                ratelist += [d[board.fen()]]
+            else:
+                ratelist += [evaluate_position(board, depth=1)]
+                cache[board.fen()] = ratelist[-1]
+        print(" ".join([str(x) for x in ratelist]), flush=True)
+
+if __name__ == '__main__':
+    evaluate_dataset('../Dataset/Games.txt')

@@ -100,7 +100,7 @@ class ChessANNBoardInterface:
     
     def evaluate(self, board, move):
         # copy board to cpy
-        cpy = copy.deepcopy(self)
+        cpy = self.copy()
         cpy.push_piece(move)
         rating = self.analyzer.rate(cpy)
         # board.pop()

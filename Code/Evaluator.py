@@ -45,11 +45,10 @@ def evaluate_dataset(file_path):
         ratelist = []
         for move in game.buffer:
             board.push_san(move)
-            print(board)
             if board.fen() in cache.keys():
-                ratelist += [d[board.fen()]]
+                ratelist += [cache[board.fen()]]
             else:
-                ratelist += [evaluate_position(board, depth=1)]
+                ratelist += [evaluate_position(board, depth=10)]
                 cache[board.fen()] = ratelist[-1]
         print(" ".join([str(x) for x in ratelist]), flush=True)
 

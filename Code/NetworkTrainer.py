@@ -53,10 +53,10 @@ for i in range(epochs):
     print('Epoch: {}/{}'.format(i, epochs))
     
     err_sum = 0
-    for batX, batY in zip(X_batches, Y_batches):
+    for it, (batX, batY) in enumerate(zip(X_batches, Y_batches)):
         err = net.train(batX, batY, niter, lr)
         err_sum += err
-        print('\tBatch error: {}'.format(err[-1]))
+        print('\tBatch {}/{} error: {}'.format(it, batch_num, err[-1]))
     print('Epoch average error: {}'.format(err_sum/float(batch_num)))
 
 interface = cabi.ChessANNBoardInterface(analyzer = cabi.BoardAnalyzer(network = net))

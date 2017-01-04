@@ -38,10 +38,10 @@ Y = (Y-Y.min())/(Y.max()-Y.min()) * 2 - 1
 net = n.NNetwork([[15,144,128],[10,110,100]], [100,Y.shape[1]])
 
 batch_size = 200
-batch_num = X.shape[0]/batch_size
-epochs = 10
+batch_num = int(X.shape[0]/batch_size)
+epochs = 3
 
-niter = 1000
+niter = 500
 lr = 0.05
 for i in range(epochs):
     perm = np.random.permutation(X.shape[0])
@@ -56,13 +56,15 @@ for i in range(epochs):
     for it, (batX, batY) in enumerate(zip(X_batches, Y_batches)):
         err = net.train(batX, batY, niter, lr)
         err_sum += err[-1]
-        print('\tBatch {}/{} error: {}'.format(it, batch_num, err[-1]))
+        print('\tBatch ({}/{}) error: {}'.format(it, batch_num, err[-1]))
     print('Epoch average error: {}'.format(err_sum/float(batch_num)))
 
 interface = cabi.ChessANNBoardInterface(analyzer = cabi.BoardAnalyzer(network = net))
 while(not interface.get_board().is_game_over()):
     print(interface.get_board())
-    
-    mv = input("Please enter your move in algebraic notation: ")
+    try:
+        mv = input("Please enter your move in algebraic notation: ")
+    except ValueError:
+        continue
     interface.push_piece(mv)
     interface.make_move()

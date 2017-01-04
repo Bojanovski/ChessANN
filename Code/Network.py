@@ -121,15 +121,14 @@ class NNetwork:
 
         # train step & session
         self.lr = tf.placeholder(tf.float32, shape=[])
-        optimizer = tf.train.GradientDescentOptimizer(self.lr)
+        #optimizer = tf.train.GradientDescentOptimizer(self.lr)
         optimizer = tf.train.AdamOptimizer(self.lr)
         self.train_step = optimizer.minimize(self.loss)
         self.session = tf.Session()
         self.session.run( tf.initialize_all_variables() )
-
-
+        
     def train(self, X, Y_, n_iter, learning_rate):
-        self.session.run( tf.initialize_all_variables() )
+        #self.session.run( tf.initialize_all_variables() )
 
         errs = [];
         for i in range(n_iter):

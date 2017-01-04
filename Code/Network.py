@@ -141,9 +141,6 @@ class NNetwork:
 
             if i%10==0 or i==n_iter-1:
                 t = self.predict(X)
-                print("%d: %f %f %f %f" % \
-                        (i, t[0][0], t[1][0], t[2][0], t[3][0]))
-                print("  err=%f" % (errs[-1]))
 
         return errs;
 

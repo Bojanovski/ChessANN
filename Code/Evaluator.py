@@ -39,10 +39,10 @@ def evaluate_position(board, depth=DEPTH):
 def evaluate_dataset(file_path):
     loader = gl.GameLoader(file_path)
     cache = {}
-    with open("../Dataset/16-x", "w") as result_file:
+    with open("../Dataset/60-x", "w") as result_file:
         gamenum = loader.get_game_num()
-        loader.get_game(16)
-        for i in range(16,gamenum):
+        loader.get_game(60)
+        for i in range(60,gamenum):
             print('Game {}/{}'.format(i, gamenum), flush=True)
             try:
                 game = loader.get_game(0)

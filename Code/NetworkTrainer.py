@@ -32,7 +32,7 @@ for i in range(loader.get_game_num()):
         
 X = np.array(X)
 Y = np.array(Y)
-Y = (Y-Y.min())/(Y.max()-Y.min())
+Y = (Y-Y.min())/(Y.max()-Y.min()) * 2 - 1
 
 ####### ZANIMLJIVI DIO KODA #######
 net = n.NNetwork([[15,144,128],[10,110,100]], [100,Y.shape[1]])
@@ -55,7 +55,7 @@ for i in range(epochs):
     err_sum = 0
     for it, (batX, batY) in enumerate(zip(X_batches, Y_batches)):
         err = net.train(batX, batY, niter, lr)
-        err_sum += err
+        err_sum += err[-1]
         print('\tBatch {}/{} error: {}'.format(it, batch_num, err[-1]))
     print('Epoch average error: {}'.format(err_sum/float(batch_num)))
 

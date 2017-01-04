@@ -37,9 +37,9 @@ Y = (Y-Y.min())/(Y.max()-Y.min())
 ####### ZANIMLJIVI DIO KODA #######
 net = n.NNetwork([[15,144,128],[10,110,100]], [100,1])
 
-batch_size = 50
+batch_size = 200
 batch_num = X.shape[0]/batch_size
-epochs = 100
+epochs = 10
 
 niter = 1000
 lr = 0.05

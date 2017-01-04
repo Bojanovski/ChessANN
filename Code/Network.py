@@ -117,7 +117,7 @@ class NNetwork:
             self.out = l.forward(self.out)
 
         # loss
-        self.loss = tf.reduce_sum((self.out - self.Y)**2)
+        self.loss = tf.reduce_mean((self.out - self.Y)**2)
 
         # train step & session
         self.lr = tf.placeholder(tf.float32, shape=[])

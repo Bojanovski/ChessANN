@@ -23,10 +23,10 @@ for i in range(loader.get_game_num()):
         for i in range(len(moves)):
             try:
                 board.push_piece(moves[i])
+                X += [fe.extract_features(board)]
+                Y += [[ratings[cnt][i]]]
             except Exception:
                 continue
-            X += [fe.extract_features(board)]
-            Y += [[ratings[cnt][i]]]
         cnt += 1
         print(cnt/float(len(ratings)))
         
@@ -35,7 +35,7 @@ Y = np.array(Y)
 Y = (Y-Y.min())/(Y.max()-Y.min())
 
 ####### ZANIMLJIVI DIO KODA #######
-net = n.NNetwork([[15,144,128],[10,110,100]], [100,1])
+net = n.NNetwork([[15,144,128],[10,110,100]], [100,Y.shape[1]])
 
 batch_size = 200
 batch_num = X.shape[0]/batch_size
@@ -52,9 +52,12 @@ for i in range(epochs):
     Y_batches = np.array_split(Yperm, batch_num, axis=0)
     print('Epoch: {}/{}'.format(i, epochs))
     
+    err_sum = 0
     for batX, batY in zip(X_batches, Y_batches):
         err = net.train(batX, batY, niter, lr)
+        err_sum += err
         print('\tBatch error: {}'.format(err[-1]))
+    print('Epoch average error: {}'.format(err_sum/float(batch_num)))
 
 interface = cabi.ChessANNBoardInterface(analyzer = cabi.BoardAnalyzer(network = net))
 while(not interface.get_board().is_game_over()):

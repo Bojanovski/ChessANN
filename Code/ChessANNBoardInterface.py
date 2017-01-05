@@ -16,11 +16,11 @@ def get_xy_from_char_and_number(cn):
     x = ord(cn[0]) - ord('a')
     y = ord(cn[1]) - ord('1')
     return x, y
-    
+
 class BoardAnalyzer:
     def __init__(self, network=None):
         self.net = network
-    
+
     def rate(self, board):
         #   neural network will go here
         if self.net == None:
@@ -35,20 +35,20 @@ class Piece:
         self.index = index
         self.pos = pos
         return
-        
+
 class ChessANNBoardInterface:
-        
+
     def __init__(self, analyzer = BoardAnalyzer()):
         self.moveCounter = 0
         self.analyzer = analyzer
         self.board = chess.Board()
         self.movesList = []
-		
+
         self.boardArray = {}
         for i in range(8):
             for j in range(8):
                 self.boardArray[i,j] = None
-        
+
         self.get_exists_and_position(chess.KING, chess.WHITE)
         self.get_exists_and_position(chess.QUEEN, chess.WHITE)
         self.get_exists_and_position(chess.ROOK, chess.WHITE)
@@ -62,11 +62,11 @@ class ChessANNBoardInterface:
         self.get_exists_and_position(chess.BISHOP, chess.BLACK)
         self.get_exists_and_position(chess.KNIGHT, chess.BLACK)
         self.get_exists_and_position(chess.PAWN, chess.BLACK)
-        
+
         #print(self.boardArray)
-        
+
         return
-        
+
     def get_board(self):
         return self.board
 
@@ -75,7 +75,7 @@ class ChessANNBoardInterface:
         for move in self.movesList:
             interface.push_piece(move)
         return interface
-	
+
     def get_piece(self, piece, color):
         pList = []
         for key in self.boardArray:
@@ -84,7 +84,7 @@ class ChessANNBoardInterface:
                 self.boardArray[key].color == color:
                 pList.append(self.boardArray[key])
         return pList
-    
+
     def get_exists_and_position(self, piece, color):
         p = self.board.pieces(piece, color)
         n = len(p)
@@ -97,7 +97,7 @@ class ChessANNBoardInterface:
             elements.append(newEle)
             self.boardArray[x, y] = newEle
         return elements
-    
+
     def evaluate(self, board, move):
         # copy board to cpy
         cpy = self.copy()
@@ -105,7 +105,7 @@ class ChessANNBoardInterface:
         rating = self.analyzer.rate(cpy)
         # board.pop()
         return rating
-    
+
     # returns the rook move if there is castling
     def is_castling(self, move):
         posXY = get_xy_from_char_and_number(move.uci()[0:2])
@@ -124,31 +124,31 @@ class ChessANNBoardInterface:
                 elif (moveToXY[0] - 1 > posXY[0]): # right castling
                     return ((7, 7), (moveToXY[0]-1, 7))
         return None
-        
+
     def push_piece(self, move):
         if isinstance(move, str):
             self.board.push_san(move)
             move = self.board.pop()
-        
+
         self.moveCounter += 1
-        
+
         posXY = get_xy_from_char_and_number(move.uci()[0:2])
         moveToXY = get_xy_from_char_and_number(move.uci()[2:4])
-        
+
         self.board.push(move)
         self.movesList.append(move)
-		
+
         c_ret = self.is_castling(move)
         if (c_ret):
             c_posXY, c_moveToXY = c_ret
             self.boardArray[c_moveToXY] = self.boardArray[c_posXY]
             self.boardArray[c_moveToXY].pos = c_moveToXY
             self.boardArray[c_posXY] = None
-        
+
         self.boardArray[moveToXY] = self.boardArray[posXY]
         self.boardArray[moveToXY].pos = moveToXY
         self.boardArray[posXY] = None
-    
+
     def make_move(self):
         #self.moveCounter += 1
         legal_moves = list(self.board.legal_moves)
@@ -160,7 +160,7 @@ class ChessANNBoardInterface:
         #posXY = get_xy_from_char_and_number(move.uci()[0:2])
         #moveToXY = get_xy_from_char_and_number(move.uci()[2:4])
         #self.board.push(move)
-        
+
         # update interface's position data
         #c_ret = self.is_castling(move)
         #if (c_ret):
@@ -172,9 +172,9 @@ class ChessANNBoardInterface:
         #self.boardArray[moveToXY] = self.boardArray[posXY]
         #self.boardArray[moveToXY].pos = moveToXY
         #self.boardArray[posXY] = None
-        
+
         self.push_piece(move)
-        
+
     def space_to_move_left(self, posXY, color):
         x = posXY[0]
         y = posXY[1]
@@ -188,7 +188,7 @@ class ChessANNBoardInterface:
             else:
                 count += 1
         return count
-        
+
     def space_to_move_right(self, posXY, color):
         x = posXY[0]
         y = posXY[1]
@@ -202,7 +202,7 @@ class ChessANNBoardInterface:
             else:
                 count += 1
         return count
-        
+
     def space_to_move_up(self, posXY, color):
         x = posXY[0]
         y = posXY[1]
@@ -216,7 +216,7 @@ class ChessANNBoardInterface:
             else:
                 count += 1
         return count
-        
+
     def space_to_move_down(self, posXY, color):
         x = posXY[0]
         y = posXY[1]
@@ -230,7 +230,7 @@ class ChessANNBoardInterface:
             else:
                 count += 1
         return count
-        
+
     def space_to_move_left_down(self, posXY, color):
         x = posXY[0]
         y = posXY[1]
@@ -245,7 +245,7 @@ class ChessANNBoardInterface:
             else:
                 count += 1
         return count
-        
+
     def space_to_move_left_up(self, posXY, color):
         x = posXY[0]
         y = posXY[1]
@@ -275,7 +275,7 @@ class ChessANNBoardInterface:
             else:
                 count += 1
         return count
-        
+
     def space_to_move_right_up(self, posXY, color):
         x = posXY[0]
         y = posXY[1]

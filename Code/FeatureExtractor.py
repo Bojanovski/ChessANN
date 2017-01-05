@@ -125,7 +125,7 @@ def extract_piece_centric_features(interface):
     list = interface.get_piece(KING, WHITE)
     v = create_feature_vector_piece_slot(list, slotSize, 1)
     vec.extend(v)
-    
+
     list = interface.get_piece(QUEEN, WHITE)
     v = create_feature_vector_piece_slot(list, slotSize, 1)
     vec.extend(v)
@@ -133,24 +133,24 @@ def extract_piece_centric_features(interface):
     list = interface.get_piece(ROOK, WHITE)
     v = create_feature_vector_piece_slot(list, slotSize, 2)
     vec.extend(v)
-    
+
     list = interface.get_piece(BISHOP, WHITE)
     v = create_feature_vector_piece_slot(list, slotSize, 2)
     vec.extend(v)
-    
+
     list = interface.get_piece(KNIGHT, WHITE)
     v = create_feature_vector_piece_slot(list, slotSize, 2)
     vec.extend(v)
-    
+
     list = interface.get_piece(PAWN, WHITE)
     v = create_feature_vector_piece_slot(list, slotSize, 8)
     vec.extend(v)
-    
+
     # blacks
     list = interface.get_piece(KING, BLACK)
     v = create_feature_vector_piece_slot(list, slotSize, 1)
     vec.extend(v)
-    
+
     list = interface.get_piece(QUEEN, BLACK)
     v = create_feature_vector_piece_slot(list, slotSize, 1)
     vec.extend(v)
@@ -158,19 +158,19 @@ def extract_piece_centric_features(interface):
     list = interface.get_piece(ROOK, BLACK)
     v = create_feature_vector_piece_slot(list, slotSize, 2)
     vec.extend(v)
-    
+
     list = interface.get_piece(BISHOP, BLACK)
     v = create_feature_vector_piece_slot(list, slotSize, 2)
     vec.extend(v)
-    
+
     list = interface.get_piece(KNIGHT, BLACK)
     v = create_feature_vector_piece_slot(list, slotSize, 2)
     vec.extend(v)
-    
+
     list = interface.get_piece(PAWN, BLACK)
     v = create_feature_vector_piece_slot(list, slotSize, 8)
     vec.extend(v)
-    
+
     # sliding pieces mobility
     # whites
     list = interface.get_piece(QUEEN, WHITE)
@@ -178,30 +178,30 @@ def extract_piece_centric_features(interface):
     vec.extend(v)
     v = create_feature_vector_sliding_plus_slot(interface, list, 1)
     vec.extend(v)
-    
+
     list = interface.get_piece(ROOK, WHITE)
     v = create_feature_vector_sliding_plus_slot(interface, list, 2)
     vec.extend(v)
-    
+
     list = interface.get_piece(BISHOP, WHITE)
     v = create_feature_vector_sliding_cross_slot(interface, list, 2)
     vec.extend(v)
-    
+
     # blacks
     list = interface.get_piece(QUEEN, BLACK)
     v = create_feature_vector_sliding_cross_slot(interface, list, 1)
     vec.extend(v)
     v = create_feature_vector_sliding_plus_slot(interface, list, 1)
     vec.extend(v)
-    
+
     list = interface.get_piece(ROOK, BLACK)
     v = create_feature_vector_sliding_plus_slot(interface, list, 2)
     vec.extend(v)
-    
+
     list = interface.get_piece(BISHOP, BLACK)
     v = create_feature_vector_sliding_cross_slot(interface, list, 2)
     vec.extend(v)
-    
+
     #print(vec)
     return vec
 
@@ -246,7 +246,7 @@ def extract_attack_def_maps(board):
     vec.extend(defense_list)
     #print(vec)
     return vec
-    
+
 def extract_features(board_interface):
     vec = []
     v = extract_global_features(board_interface.get_board())
@@ -255,7 +255,7 @@ def extract_features(board_interface):
     vec.extend(v)
     v = extract_attack_def_maps(board_interface.get_board())
     vec.extend(v)
-    
+
     return vec;
 
 
@@ -265,7 +265,7 @@ if __name__=="__main__":
     i = 0
     while (True):
         print(interface.get_board())
-        
+
         vec = []
         v = extract_global_features(interface.get_board())
         vec.extend(v)
@@ -273,13 +273,13 @@ if __name__=="__main__":
         vec.extend(v)
         v = extract_attack_def_maps(interface.get_board())
         vec.extend(v)
-        
+
         if (i == 30):
             ijo = interface.copy()
             print('copy')
             print(ijo.get_board())
-        
+
         #print(vec)
-        
+
         interface.make_move()
         #input()

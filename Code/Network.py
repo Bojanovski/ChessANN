@@ -39,6 +39,14 @@ class FCLayer:
         s = tf.matmul(X, tf.transpose(self.W)) + self.b
         return self.nonlinearity(s)
 
+    def get_params(self, session, feed_dict):
+        """Evaluates and returns the layer parameters (W and b).
+        """
+        fetches = [self.W, self.b]
+        (W, b) = self.session.run(fetches, feed_dict=feed_dict)
+
+        return W, b
+
 
 class GroupLayer:
     """A custom locally-connected layer.
@@ -67,7 +75,6 @@ class GroupLayer:
         for (ingroup, outgroup) in zip(input_groups, output_groups):
             self.sublayers += [FCLayer(ingroup, outgroup, nonlinearity)]
 
-
     def forward(self, X):
         """Forwards the input vector through this locally-connected layer.
 
@@ -81,6 +88,13 @@ class GroupLayer:
             h += [subl.forward(X[: , self.boundaries[i] : self.boundaries[i+1]])]
         return tf.concat(1, h)
 
+    def get_params(self, session, feed_dict):
+        """Evaluates and returns the layer parameters.
+
+        The return value is actually a list of sublayers' (W,b) tuples
+        """
+        return [subl.get_params(session, feed_dict) for subl in self.sublayers]
+
 
 # group_dimens - 2D matrica, u prvom retku su dimenzije ulaza svake grupe
 # a u drugom dimenzije izlaza
@@ -89,10 +103,17 @@ class GroupLayer:
 # druga vrijednost u architecture je jednaka sumi vrijednosti druge dimenzije group_dimens
 class NNetwork:
     """A 2-layer neural network.
-    FC_dim -- dimensions of hidden layers after the group layer.
     """
 
     def __init__(self, LC_groups, FC_dim):
+        """
+        Arguments:
+            LC_groups --- a tuple (ingroups, outgroups) denoting the
+                          locally-connected sublayers; the i-th such sublayer
+                          has dimensions (ingroups[i] x outgroups[i])
+
+            FC_dim    --- dimension of FC layers after the LC layer
+        """
 
         (LC_ingroups, LC_outgroups) = LC_groups
         D = sum(LC_ingroups)    # input layer dimensionality
@@ -126,9 +147,11 @@ class NNetwork:
         self.train_step = optimizer.minimize(self.loss)
         self.session = tf.Session()
         self.session.run( tf.initialize_all_variables() )
-        
+
+
     def train(self, X, Y_, n_iter, learning_rate):
-        #self.session.run( tf.initialize_all_variables() )
+        """Trains the network on the given samples for n_iter iterations.
+        """
 
         errs = [];
         for i in range(n_iter):
@@ -163,12 +186,13 @@ def test():
 
     tf.set_random_seed(42)
 
-    eta=1e-2; niter=1000
+    eta=1e-0; niter=1000
     print("lr={}, niter={}".format(eta, niter))
 
-    net = NNetwork(LC_groups=([2],[2]), FC_dim=[2], learning_rate=eta)
-    errs = net.train(X, Y, n_iter=niter)
+    net = NNetwork(LC_groups=([2],[2]), FC_dim=[2])
+    errs = net.train(X, Y, n_iter=niter, learning_rate=eta)
     print(net.predict(X))
+
 
 if __name__=="__main__":
     test()

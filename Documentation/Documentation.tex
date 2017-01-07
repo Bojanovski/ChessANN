@@ -1,6 +1,7 @@
 
 \documentclass[journal]{IEEEtran}
 \usepackage{cite}
+\usepackage[utf8]{inputenc}
 \usepackage{caption}
 \usepackage{url}
 \usepackage{amssymb}
@@ -29,19 +30,13 @@ Bojan Lovrovic\\
 \thanks{}
 }
 
-% The paper headers
-\markboth{Graduate seminar, May~2016}%
-{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
-% The only time the second header will appear is for the odd numbered pages
-% after the title page when using the twoside option.
-
 % make the title area
 \maketitle
 
-\section{Introduction}
+\section{Uvod}
 \IEEEPARstart{P}{}rocedural content generation (PCG) is the programmatic generation of content using a random or pseudo-random process that results in an unpredictable range of possible assets, whether it be geometry, textures, sounds or even narratives. It can also be combined with other different methods such as machine learning. This paper will present an introduction to random number generation, then move to varying methods used in PCG and their application in virtual worlds such as computer generated imagery, video games, virtual realities, simulations and so forth.
 
-\section{Algorithms}
+\section{Pregled područja}
 \subsection{Broad classification}
 There are two competing methodologies in procedural content generation. The first approach creates a physical model of the environment and the process that creates the generated object, then simply runs the simulation, and the results should emerge as they do in nature. Examples of such algorithms and simulations are, among others, dynamic weather, fire propagation, fluid dynamics, genetic algorithm and rain drop algorithm.
 \par
@@ -84,20 +79,10 @@ f(x)=\begin{cases}
 \end{cases}
 \end{gather}
 When trying to generate occurrences in nature, this is usually combined with the typical Perlin noise to achieve more visually believable results.
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=.7\linewidth]{ridgedFormula.png}
-	\captionof{figure}{Example of ridge creation.}
-	\label{fig:ridgedFormula}
-\end{figure}
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=.6\linewidth]{ridgedMultifractal.png}
-	\captionof{figure}{Perlin noise combined with ridged multifractal.}
-	\label{fig:ridgedMultifractal}
-\end{figure}
 
-\section{PCG used to decrease memory space}
+\section{Implementacija}
+Implementacija se temelji na \cite{giraffe}.
+
 When talking about memory space reduction with PCG, the video game \textit{.kkrieger} is a good example of what can be achieved by generating assets only before use. The game requires only 97 kilobytes of disk space. If stored conventionally, it would require around 300 megabytes, according to developers.
 \par
 Another example is the upcoming video game called \textit{No Man's Sky} which should feature up to $2^{32}$ fully explorable procedurally generated worlds. Said worlds would include it's own specific flora and fauna, as well as unique terrain per world (see figure \ref{fig:nomansky}), meaning each world would use significant amount of memory. It is obvious that this would be impossible to store on computer memory as a whole and therefore PCG imposes itself as the only solution. Although the overall quality of the content is still questioned, the project has attracted a lot of attention.

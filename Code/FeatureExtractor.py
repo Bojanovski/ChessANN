@@ -7,10 +7,8 @@ from dependencies.chess import \
         G1, G2, G3, G4, G5, G6, G7, G8, H1, H2, H3, H4, H5, H6, H7, H8
 import ChessANNBoardInterface as cabi
 
-
 def is_empty(board, square):
     return board.piece_type_at(square) is None
-
 
 def get_material_configuration(board):
     wq = len(board.pieces(QUEEN,  WHITE)) / 1.0
@@ -25,7 +23,6 @@ def get_material_configuration(board):
     bn = len(board.pieces(KNIGHT, BLACK)) / 2.0
     bp = len(board.pieces(PAWN,   BLACK)) / 8.0
     return [wq, wr, wb, wn, wp, bq, br, bb, bn, bp]
-
 
 def get_castling_rights(board):
     k_white = float(board.has_kingside_castling_rights(WHITE) \
@@ -48,7 +45,6 @@ def get_castling_rights(board):
 
     return [k_white, q_white, k_black, q_black]
 
-
 def extract_global_features(board):
     assert(board.is_valid())
     vec = []
@@ -63,7 +59,6 @@ def extract_global_features(board):
     vec.extend(get_castling_rights(board))
 
     return vec
-
 
 def create_feature_vector_piece_slot(listOfPieces, slotSize, slotsNum):
     vec = [0.0]*slotsNum*slotSize
@@ -204,7 +199,6 @@ def extract_piece_centric_features(interface):
 
     #print(vec)
     return vec
-
 
 def extract_attack_def_maps(board):
     assert board.is_valid(), "Invalid board!"

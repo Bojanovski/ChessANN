@@ -1,0 +1,31 @@
+\begin{thebibliography}{1}
+
+\bibitem{diehard}
+\url{https://en.wikipedia.org/wiki/Diehard_tests}.
+
+\bibitem{mersennePrime}
+\url{https://en.wikipedia.org/wiki/Mersenne_prime}.
+
+\bibitem{monteCarlo}
+\url{https://en.wikipedia.org/wiki/Monte_Carlo_method}.
+
+\bibitem{christer}
+Christer Ericson.
+\newblock {\em Real-Time Collision Detection}.
+\newblock 2005.
+\newblock \url{http://realtimecollisiondetection.net/}.
+
+\bibitem{twoSourceRandomNumGenerator}
+David~Zuckerman Eshan~Chattopadhyay.
+\newblock Explicit two-source extractors and resilient functions.
+\newblock {\em The Electronic Colloquium on Computational Complexity}, 2016.
+\newblock \url{http://eccc.hpi-web.de/report/2015/119/}.
+
+\bibitem{gpugems2}
+Randima~Fernando Matt~Pharr.
+\newblock {\em GPU Gems 2}.
+\newblock 2005.
+\newblock
+  \url{http://http.developer.nvidia.com/GPUGems2/gpugems2_chapter26.html}.
+
+\end{thebibliography}

@@ -2,7 +2,7 @@
 **/.ipynb_checkpoints
 **stockfish
 
-*.aux
+**/*.aux
 *.bbl
 *.blg
 *.log

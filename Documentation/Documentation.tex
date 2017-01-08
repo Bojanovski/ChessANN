@@ -177,8 +177,7 @@ Izlazni				& 1		\\
 
 
 \subsection{Treniranje mreže}
-Ovdje napisi nes Zlatane!!!! :)
-
+Za treniranje mreže korišten je skup primjera ocjenjenih konfiguracija ploče. Preuzet je niz šahovskih partija koje su naknadno označene alatom Stockfish. Ocjene su normalizirane na interval od -1 do 1, kako bi odgovarale izlaznoj funkciji, tangensu hiperbolnom. Funkcija gubitka definirana je kao srednje kvadratno odstupanje izlaza mreže od očekivane vrijednosti. Za minimizaciju gubitka korišten je backpropagation algoritam s Adam optimizatorom. Rezultati nažalost nisu ispunili očekivanja jer se srednja kvadratna greška nije uspjela spustiti ispod 1.05, što je loš rezultat za interval [-1,1]. Uz to, kad bi se mreža koristila za igranje, čini se kao da povlači prvi potez koji joj se ponudi, umjesto obavljanja detaljnije analize. Razlog za ovo je vjerojatno sam algoritam optimizacije koji nije dovoljno jak da bi rješio ovako složen problem. U radu Matthewa Laija, na kojem je ovaj projekt temeljen, za optimizaciju se koristio TD-Leaf(\lambda) algoritam, koji je vjerojatno efikasniji u rješavanju ovakvih problema. S pozitivne strane, barem je pokazano kako ovakva verzija algoritma za učenje nije efikasna za problem igranja šaha.
 
 
 \section{Zaključak}

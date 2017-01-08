@@ -70,7 +70,7 @@ class ChessANNBoardInterface:
     def get_board(self):
         return self.board
 
-    def copy(self):
+    def copy(self, x=None):
         interface = ChessANNBoardInterface()
         for move in self.movesList:
             interface.push_piece(move)
@@ -124,12 +124,8 @@ class ChessANNBoardInterface:
                 elif (moveToXY[0] - 1 > posXY[0]): # right castling
                     return ((7, 7), (moveToXY[0]-1, 7))
         return None
-
-    def push_piece(self, move):
-        if isinstance(move, str):
-            self.board.push_san(move)
-            move = self.board.pop()
-
+    
+    def push_piece_alt(self, move):
         self.moveCounter += 1
 
         posXY = get_xy_from_char_and_number(move.uci()[0:2])
@@ -148,6 +144,14 @@ class ChessANNBoardInterface:
         self.boardArray[moveToXY] = self.boardArray[posXY]
         self.boardArray[moveToXY].pos = moveToXY
         self.boardArray[posXY] = None
+        
+        return self
+    
+    def push_piece(self, move):
+        if isinstance(move, str):
+            self.board.push_san(move)
+            move = self.board.pop()
+        return self.push_piece_alt(move)
 
     def make_move(self):
         #self.moveCounter += 1

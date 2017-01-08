@@ -37,6 +37,28 @@ def evaluate_position(board, depth=DEPTH):
     return score
 
 
+def get_best_move(board, depth=DEPTH):
+    engine = subprocess.Popen(ENGINE_BIN, bufsize=0, universal_newlines=True,
+                              stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+
+    # take care of initial (credits) line
+    engine.stdout.readline()
+
+    # search from current position to given depth
+    engine.stdin.write("position fen "+board.fen()+"\n")
+    engine.stdin.write("go depth "+str(DEPTH)+"\n")
+
+    while True:
+        line = engine.stdout.readline().strip()
+        if line.startswith("bestmove"):
+            break
+
+    engine.stdin.write("quit\n")
+    # score in centipawns
+    move = line.split()[1]
+    return move
+
+
 def evaluate_dataset(file_path):
     loader = GameLoader(file_path)
     cache = {}

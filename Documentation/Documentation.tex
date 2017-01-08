@@ -19,14 +19,20 @@
 
 
 % paper title
-\title{Review of procedural content generation methods and applications}
+\title{Učenje umijetne neuronske mreže igranje šaha}
 
 % author names and IEEE memberships
 \author{
-Bojan Lovrovic\\
-\textit{Faculty of Electrical Engineering and Computing}\\
-\textit{University of Zagreb}\\
-\textit{Zagreb, Hrvatska}
+
+Antun Maldini\\
+Zlatan Sičanica\\
+Bruno Rosan\\
+Jure Perović\\
+Damir Kovačević\\
+Bojan Lovrović\\
+
+\textit{Fakultet elektrotehnike i računarstva}\\
+\textit{Sveučilište u Zagrebu}\\
 
 \thanks{}
 }
@@ -122,8 +128,6 @@ Njegova evaluacijska funkcija koristi prilagođenu verziju TD-Leaf algoritma koj
 
 
 
-
-
 \section{Implementacija}
 Implementacija se temelji na diplomskom projektu studenta Matthewa Laija \cite{giraffe}. Ovo poglavlje će proći kroz postupak generiranja skupa za učenje, izvlačenje vektora značajki za pojedini ulazni primjer, izradu te na kraju treniranje mreže.
 \subsection{Generiranje podataka za učenje}
@@ -177,11 +181,16 @@ Izlazni				& 1		\\
 
 
 \subsection{Treniranje mreže}
-Za treniranje mreže korišten je skup primjera ocjenjenih konfiguracija ploče. Preuzet je niz šahovskih partija koje su naknadno označene alatom Stockfish. Ocjene su normalizirane na interval od -1 do 1, kako bi odgovarale izlaznoj funkciji, tangensu hiperbolnom. Funkcija gubitka definirana je kao srednje kvadratno odstupanje izlaza mreže od očekivane vrijednosti. Za minimizaciju gubitka korišten je backpropagation algoritam s Adam optimizatorom. Rezultati nažalost nisu ispunili očekivanja jer se srednja kvadratna greška nije uspjela spustiti ispod 1.05, što je loš rezultat za interval [-1,1]. Uz to, kad bi se mreža koristila za igranje, čini se kao da povlači prvi potez koji joj se ponudi, umjesto obavljanja detaljnije analize. Razlog za ovo je vjerojatno sam algoritam optimizacije koji nije dovoljno jak da bi rješio ovako složen problem. U radu Matthewa Laija, na kojem je ovaj projekt temeljen, za optimizaciju se koristio TD-Leaf(\lambda) algoritam, koji je vjerojatno efikasniji u rješavanju ovakvih problema. S pozitivne strane, barem je pokazano kako ovakva verzija algoritma za učenje nije efikasna za problem igranja šaha.
+Za treniranje mreže korišten je skup primjera ocjenjenih konfiguracija ploče. Preuzet je niz šahovskih partija koje su naknadno označene alatom Stockfish. Ocjene su normalizirane na interval od -1 do 1, kako bi odgovarale izlaznoj funkciji, tangensu hiperbolnom. Funkcija gubitka definirana je kao srednje kvadratno odstupanje izlaza mreže od očekivane vrijednosti. Za minimizaciju gubitka korišten je backpropagation algoritam s Adam optimizatorom. Rezultati nažalost nisu ispunili očekivanja jer se srednja kvadratna greška nije uspjela spustiti ispod 1.05, što je loš rezultat za interval  $\left[0,1\right]$. Uz to, kad bi se mreža koristila za igranje, čini se kao da povlači prvi potez koji joj se ponudi, umjesto obavljanja detaljnije analize. Razlog za ovo je vjerojatno sam algoritam optimizacije koji nije dovoljno jak da bi rješio ovako složen problem.
+
+
+\subsection{Program}
+Izvorni kod za izvođenje programa je pohranjen u datotekama: \textit{AlternativeTrainer.py}, \textit{ChessANNBoardInterface.py}, \textit{Evaluator.py}, \textit{FeatureExtractor.py}, \textit{GameLoader.py}, \textit{Network.py} i \textit{NetworkTrainer.py}. Dok je \textit{Network.py} samo prisutan za xor testiranje mreze, \textit{NetworkTrainer.py} i \textit{AlternativeTrainer.py} služe za treniranje. \textit{Evaluator.py} se je koristio za izradu skupa za učenje.
+
 
 
 \section{Zaključak}
-Although PCG is present for decades, it is still an approach being researched and with it's use rising. Increases in hardware capabilities also have a positive effect on this trend. On the other hand, there is a popular belief that PCG can never produce content as good as the artists or designers can. This is definitely true with today's hardware and software capabilities, so the question that poses itself is, where to draw the line. To what point should content be generated and then left out to professionals to do the rest. The approach of no Man's Sky, where almost everything is procedurally generated, seems too excessive, yet on the contrast, generating random noise in image editor pixel by pixel would be even worse. Whenever the line might be, it will surely move in avail of PCG and we are yet to see much more surprises from this field.
+Iako se je implementacija pokazala neuspiješnom dala je uvid u najbolje tehnike ostvarenja ovakvog sustava (\cite{giraffe} i \cite{dpchess}) kao i dostupne alate za brže dolaženje do rezultata. Činjenica je da je ovaj projek bio preambiciozni pothvat. Glavni razlog je što ne postoji "točno" riješenje već je bilo potrebno do dovoljno dobrog vektora značajki dolaziti empirijskim metodama, što nam je osobno potvrdio i autor \cite{giraffe}. U njegovom radu, na kojem je ovaj projekt temeljen, za optimizaciju se koristio TD-Leaf($\lambda$) algoritam, koji je vjerojatno efikasniji u rješavanju ovakvih problema. S pozitivne strane, barem je pokazano kako ovakva verzija algoritma za učenje nije efikasna za problem igranja šaha.
 
 % Can use something like this to put references on a page
 % by themselves when using endfloat and the captionsoff option.

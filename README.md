@@ -7,6 +7,6 @@ but at least it provided some additional experience in working with Tensorflow.
 
 **************************************************************
 Members: <br />
-Bojan Lovrovic <br />
-Zlatan Sicanica <br />
-Antun Maldini <br />
+- Bojan Lovrovic <br />
+- Zlatan Sicanica <br />
+- Antun Maldini <br />

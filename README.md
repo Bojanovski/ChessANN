@@ -6,7 +6,7 @@ This was a project from my university which never worked quite like we intended 
 but at least it provided some additional experience in working with Tensorflow.
 
 **************************************************************
-Members: <br />
-- Bojan Lovrovic <br />
-- Zlatan Sicanica <br />
-- Antun Maldini <br />
+Members:
+- Bojan Lovrovic
+- Zlatan Sicanica
+- Antun Maldini
